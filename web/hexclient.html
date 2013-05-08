@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<!-- Copyright (c) 2012, the Dart project authors.  Please see the AUTHORS file
+     for details. All rights reserved. Use of this source code is governed by a
+     BSD-style license that can be found in the LICENSE file. -->
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hex-Master Client</title>
+    <link type="text/css" rel="stylesheet" href="hexclient.css">
+    <script src="http://meeples.se/javascript/jsmatrix_008.js"></script>
+    <script src="http://meeples.se/javascript/jsmatrix-pathfinding_008.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>  
+        
+  </head>
+  <body id="htmlbody">
+    <h1>Hex-Master Client</h1>
+
+    <p>A hex-master client visualization using requestAnimationFrame.</p>
+
+    <div>
+      <canvas id="container" width="500px" height="400px"></canvas>
+    </div>
+
+    <footer>
+      <p id="summary"> </p>
+      <p id="notes"> </p>
+      <p id="log"> </p>
+    </footer>
+
+    <script type="application/dart" src="hexclient.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+  <script>
+    var matrix = new jsmatrix.Matrix2d(8, 24, new jsmatrix.Hex());
+    
+    for ( var i = 0; i < 45; i++){
+        var row = Math.floor((Math.random()*7)+1);
+        var col = Math.floor((Math.random()*23)+1);
+
+        matrix.get_cell(row,col).set_item("rock", {});
+    }
+    
+    matrix.point = function(row, col){
+      return {row:row, col:col}; 
+    }
+
+    // Create Configuration to block rocks
+    var conf = new jsmatrix.Configuration();
+    conf.add_blocker("rock");
+    
+  </script>
+</html>

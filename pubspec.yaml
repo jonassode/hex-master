@@ -1,0 +1,6 @@
+name: solar
+description: A solar system visualization using requestAnimationFrame
+dependencies:
+  browser: any
+  js: any
+  
