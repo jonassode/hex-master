@@ -4,6 +4,7 @@ library hexlib;
 import 'package:js/js.dart' as js;
 import 'dart:math';
 import 'dart:html';
+import 'Units.dart';
 
 class HexField {
   num size;
@@ -16,65 +17,37 @@ class HexField {
   num xangle;
   num yangle;
   num border = 2;
+  var matrix;
   
-  HexField(this.x, this.y, this.size){
+  HexField(this.matrix, this.x, this.y, this.size){
     height = size;
     width = size * 1.5;
     xangle = size * 0.75;
     yangle = xangle / 2;
   }
   
-  void set_area(r, c){
-    
-    var matrix = js.context.matrix;
-    var conf = js.context.conf;
-    
-    var ccell = matrix.get_cell(r,c);
-    
-    // Clean up matrix      
-    for( var row = 0; row < matrix.rows; row++) {
-      for( var col = 0; col < matrix.cols; col++) {
-        var cell = matrix.get_cell(row,col);
-        cell.has_item_by_type("area") ? cell.remove_item('area') : false;
-        cell.has_item_by_type("start") ? cell.remove_item('start') : false;
-      }
-    }
-
-    // Defining the start and goal positions
-    var depth = 2;
-    var start = matrix.point(r, c);
-    var area = matrix.find_area(start, null, depth, conf);   
-    
-    ccell.set_item('start', {});
-
-    for ( var i = 0; i < area.length; i++ ){
-      var pos = area[i].pos;
-      matrix.get_cell(pos.row,pos.col).set_item('area', {});           
-    } 
-    
-  }
-  
   void draw(context){
     
-    var m = js.context.matrix;
-        
     num xx;
     num yy = y;
     bool even = false;
     var color = 'lightblue';
     
-    for (int j = 0; j < m.rows; j++) {
+    for (int j = 0; j < matrix.rows; j++) {
       xx = x;
       if ( even ){
         xx += width / 2 + 1;
       }
-      for (int i = 0; i < m.cols; i++) {
+      for (int i = 0; i < matrix.cols; i++) {
         var color = "lightblue";
-        color = m.get_cell(j,i).has_item_by_type("area") ? "pink" : color;
-        color = m.get_cell(j,i).has_item_by_type("start") ? "blue" : color;
-        color = m.get_cell(j,i).has_item_by_type("rock") ? "gray" : color;
+        var text;
+        var cell = matrix.get_cell(j,i);
+        color = cell.has_item_by_type("area") ? "pink" : color;
+        color = cell.has_item_by_type("start") ? "blue" : color;
+        color = cell.has_item_by_type("rock") ? "gray" : color;
+        // text = cell.has_item_by_type("unit") ? cell.get_item("unit").sign : text;
         
-        draw_hex(context, xx, yy, color);
+        draw_hex(context, xx, yy, color, text);
         xx += width + border;
       }
       yy += (height * 1.375) + border;
@@ -82,7 +55,7 @@ class HexField {
     }
   }
   
-  void draw_hex(context, xx, yy, color){
+  void draw_hex(context, xx, yy, color, text){
     
     // Hex 
     context.beginPath();
@@ -99,6 +72,13 @@ class HexField {
 
     context.fill();
     context.closePath();
+    
+    if ( text != null ){
+      num textSize = 16;
+      context.fillStyle = "black"; 
+      context.font = "bold " + textSize.toString() + "px Arial";
+      context.fillText(text, xx + (width/2 - (textSize/3)), yy + (height/1 - (textSize/2)));
+    }
     
   }
   

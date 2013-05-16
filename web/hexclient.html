@@ -33,22 +33,10 @@
     <script src="packages/browser/dart.js"></script>
   </body>
   <script>
-    var matrix = new jsmatrix.Matrix2d(8, 24, new jsmatrix.Hex());
-    
-    for ( var i = 0; i < 45; i++){
-        var row = Math.floor((Math.random()*7)+1);
-        var col = Math.floor((Math.random()*23)+1);
 
-        matrix.get_cell(row,col).set_item("rock", {});
-    }
-    
-    matrix.point = function(row, col){
+    var Point = function(row, col){
       return {row:row, col:col}; 
     }
-
-    // Create Configuration to block rocks
-    var conf = new jsmatrix.Configuration();
-    conf.add_blocker("rock");
     
   </script>
 </html>

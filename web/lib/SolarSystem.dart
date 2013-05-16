@@ -5,6 +5,7 @@ import 'dart:html';
 import "Hex.dart";
 import "GamePoint.dart";
 import 'dart:math';
+import 'GameMap.dart';
 
 /**
  * A representation of the solar system.
@@ -18,8 +19,8 @@ class SolarSystem {
 
   num _width;
   num _height;
-  HexField hex = new HexField(10, 20, 30);
-
+  GameMap map = new GameMap(8, 24, 10, 20);
+  
   PlanetaryBody sun;
 
   num renderTime;
@@ -67,10 +68,10 @@ class SolarSystem {
   
   _onclick(e) {
     var coords = _getCanvasCoordinates(e);
-    Hex h = hex.clickedHex(coords.x, coords.y);
+    Hex h = map.hexfield.clickedHex(coords.x, coords.y);
     query("#log").text = "Canvas Clicked. " + h.row.toString() + ", " + h.col.toString();
     
-    hex.set_area(h.row, h.col);
+    map.set_area(h.row, h.col);
     
     requestRedraw();
   }
@@ -139,7 +140,7 @@ class SolarSystem {
     drawBackground(context);
     drawPlanets(context);
     
-    hex.draw(context);
+    map.draw(context);
     
     //requestRedraw();
   }
